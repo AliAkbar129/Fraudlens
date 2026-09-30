@@ -1,0 +1,39 @@
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  dataset_name: "ieee-cis"
+  test_size: 0.2
+  val_size: 0.1
+
+features:
+  velocity_windows: ["1h", "6h", "24h", "7d"]
+  graph_construction:
+    num_hops: 2
+
+model:
+  gnn_type: "graphsage"
+  hidden_dim: 128
+  num_layers: 2
+  dropout: 0.3
+  heads: 4
+  lgbm_params:
+    learning_rate: 0.05
+    num_leaves: 31
+    objective: "binary"
+  ensemble_method: "stacking"
+  focal_loss_gamma: 2.0
+
+training:
+  epochs: 100
+  lr: 0.001
+  batch_size: 512
+  early_stopping_patience: 10
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  model_path: "artifacts/models"
+
+explainability:
+  shap_max_samples: 1000
+  gnn_explainer_epochs: 100
