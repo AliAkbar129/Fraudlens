@@ -43,6 +43,9 @@ class MlScoringService
 
             if ($response->successful()) {
                 $data = $response->json();
+                if (!is_array($data) || !isset($data['risk_score']) || !is_numeric($data['risk_score']) || !is_finite((float) $data['risk_score']) || $data['risk_score'] < 0 || $data['risk_score'] > 1 || empty($data['model_version'])) {
+                    throw new \UnexpectedValueException('Invalid or unversioned ML response');
+                }
                 return $this->storeScore($transaction, $data, $latencyMs);
             }
             
@@ -52,8 +55,7 @@ class MlScoringService
             $latencyMs = (int) ((microtime(true) - $start) * 1000);
         }
 
-        // Fallback scoring if ML API fails
-        return $this->fallbackScoring($transaction, $latencyMs);
+        throw new \RuntimeException('ML scoring unavailable; transaction must remain unscored.');
     }
 
     /**
@@ -73,7 +75,7 @@ class MlScoringService
             'unified_explanation' => $data['unified_explanation'] ?? null,
             'latency_ms' => $latencyMs,
             'is_fraud_predicted' => ($data['risk_score'] ?? 0.5) > config('fraudlens.auto_flag_threshold', 0.7),
-            'confidence' => $data['confidence'] ?? 0.8,
+            'confidence' => $data['confidence'] ?? null,
             'scored_at' => now(),
         ]);
 
@@ -85,22 +87,6 @@ class MlScoringService
     /**
      * Fallback scoring when API is unavailable.
      */
-    protected function fallbackScoring(Transaction $transaction, int $latencyMs): MlScore
-    {
-        $score = MlScore::create([
-            'transaction_id' => $transaction->id,
-            'risk_score' => 0.0, // Default to lowest risk on failure, or could be static logic
-            'model_version' => 'fallback',
-            'latency_ms' => $latencyMs,
-            'is_fraud_predicted' => false,
-            'scored_at' => now(),
-        ]);
-
-        TransactionScored::dispatch($transaction, $score);
-
-        return $score;
-    }
-
     /**
      * Build the payload for the ML API.
      */

@@ -13,6 +13,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-text">
       <AppLayout>
+        <aside role="status" className="p-3 border border-amber-500 text-amber-200">Legacy prototype: some screens contain demonstration data. For measured synthetic-data experiments, run the research_lab workbench documented in the README.</aside>
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Navigate to="/command-center" replace />} />

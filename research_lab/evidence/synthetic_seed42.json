@@ -1,0 +1,134 @@
+{
+  "mode": "synthetic",
+  "generator": "Local stylized amount/time simulator v1; not the Fraud Detection Handbook generator",
+  "seed": 42,
+  "rows": 9000,
+  "train_rows": 5000,
+  "validation_rows": 1400,
+  "test_rows": 1800,
+  "label_delay_days": 2,
+  "train_cutoff_seconds": 2332800,
+  "test_start_seconds": 3110400,
+  "selected_model": "logistic",
+  "validation_average_precision": {
+    "logistic": 0.2410703283562779,
+    "gradient_boosting": 0.1610431814424456
+  },
+  "test_prevalence": 0.028333333333333332,
+  "test": {
+    "rules": {
+      "average_precision": 0.07989684668023676,
+      "roc_auc": 0.7414152625029429,
+      "budgets": [
+        {
+          "budget_per_day": 5,
+          "reviewed": 45,
+          "fraud_found": 10,
+          "precision": 0.2222222222222222,
+          "recall": 0.19607843137254902,
+          "false_alerts": 35,
+          "reviewed_fraud_amount": 2908.33
+        },
+        {
+          "budget_per_day": 10,
+          "reviewed": 90,
+          "fraud_found": 11,
+          "precision": 0.12222222222222222,
+          "recall": 0.21568627450980393,
+          "false_alerts": 79,
+          "reviewed_fraud_amount": 3125.63
+        },
+        {
+          "budget_per_day": 25,
+          "reviewed": 225,
+          "fraud_found": 14,
+          "precision": 0.06222222222222222,
+          "recall": 0.27450980392156865,
+          "false_alerts": 211,
+          "reviewed_fraud_amount": 3480.23
+        }
+      ]
+    },
+    "logistic": {
+      "average_precision": 0.12122312071312019,
+      "roc_auc": 0.7593246561060103,
+      "budgets": [
+        {
+          "budget_per_day": 5,
+          "reviewed": 45,
+          "fraud_found": 6,
+          "precision": 0.13333333333333333,
+          "recall": 0.11764705882352941,
+          "false_alerts": 39,
+          "reviewed_fraud_amount": 2550.44
+        },
+        {
+          "budget_per_day": 10,
+          "reviewed": 90,
+          "fraud_found": 10,
+          "precision": 0.1111111111111111,
+          "recall": 0.19607843137254902,
+          "false_alerts": 80,
+          "reviewed_fraud_amount": 2989.88
+        },
+        {
+          "budget_per_day": 25,
+          "reviewed": 225,
+          "fraud_found": 27,
+          "precision": 0.12,
+          "recall": 0.5294117647058824,
+          "false_alerts": 198,
+          "reviewed_fraud_amount": 4115.15
+        }
+      ]
+    },
+    "gradient_boosting": {
+      "average_precision": 0.14544792622400723,
+      "roc_auc": 0.768270944741533,
+      "budgets": [
+        {
+          "budget_per_day": 5,
+          "reviewed": 45,
+          "fraud_found": 8,
+          "precision": 0.17777777777777778,
+          "recall": 0.1568627450980392,
+          "false_alerts": 37,
+          "reviewed_fraud_amount": 1768.23
+        },
+        {
+          "budget_per_day": 10,
+          "reviewed": 90,
+          "fraud_found": 16,
+          "precision": 0.17777777777777778,
+          "recall": 0.3137254901960784,
+          "false_alerts": 74,
+          "reviewed_fraud_amount": 2372.5299999999997
+        },
+        {
+          "budget_per_day": 25,
+          "reviewed": 225,
+          "fraud_found": 24,
+          "precision": 0.10666666666666667,
+          "recall": 0.47058823529411764,
+          "false_alerts": 201,
+          "reviewed_fraud_amount": 3671.11
+        }
+      ]
+    }
+  },
+  "features": [
+    "log_amount",
+    "hour_sin",
+    "hour_cos",
+    "customer_count",
+    "amount_ratio"
+  ],
+  "duration_seconds": 0.5768571119999706,
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "limitations": [
+    "Synthetic mechanisms favor amount/time patterns",
+    "No bank-data validation",
+    "No realized financial savings",
+    "No drift experiment yet"
+  ]
+}
