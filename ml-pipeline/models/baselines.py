@@ -12,7 +12,7 @@ class BaselineModels:
     
     def __init__(self, random_state: int = 42):
         self.random_state = random_state
-        self.models = {}
+        self.models: dict = {}
 
     def _evaluate(self, model, X_test, y_test) -> dict:
         probs = model.predict_proba(X_test)[:, 1]

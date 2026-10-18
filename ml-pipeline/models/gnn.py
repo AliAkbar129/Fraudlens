@@ -7,7 +7,7 @@ class GraphSAGEModel(torch.nn.Module):
     """Homogeneous GraphSAGE."""
     def __init__(self, in_channels, hidden_channels, out_channels, num_layers=2, dropout=0.3):
         super().__init__()
-        self.dropout = dropout
+        self.dropout = torch.nn.Dropout(dropout)
         self.convs = torch.nn.ModuleList()
         self.convs.append(SAGEConv(in_channels, hidden_channels))
         for _ in range(num_layers - 2):
@@ -18,7 +18,7 @@ class GraphSAGEModel(torch.nn.Module):
         for i, conv in enumerate(self.convs[:-1]):
             x = conv(x, edge_index)
             x = F.relu(x)
-            x = F.dropout(x, p=self.dropout, training=self.training)
+            x = self.dropout(x)
         x = self.convs[-1](x, edge_index)
         return x
 
@@ -26,18 +26,18 @@ class GATModel(torch.nn.Module):
     """Homogeneous GAT."""
     def __init__(self, in_channels, hidden_channels, out_channels, num_layers=2, heads=4, dropout=0.3):
         super().__init__()
-        self.dropout = dropout
+        self.dropout = torch.nn.Dropout(dropout)
         self.convs = torch.nn.ModuleList()
-        self.convs.append(GATConv(in_channels, hidden_channels, heads=heads))
+        self.convs.append(GATConv(in_channels, hidden_channels, heads=heads, add_self_loops=False))
         for _ in range(num_layers - 2):
-            self.convs.append(GATConv(hidden_channels * heads, hidden_channels, heads=heads))
-        self.convs.append(GATConv(hidden_channels * heads, out_channels, heads=1, concat=False))
+            self.convs.append(GATConv(hidden_channels * heads, hidden_channels, heads=heads, add_self_loops=False))
+        self.convs.append(GATConv(hidden_channels * heads, out_channels, heads=1, concat=False, add_self_loops=False))
 
     def forward(self, x, edge_index):
         for i, conv in enumerate(self.convs[:-1]):
             x = conv(x, edge_index)
             x = F.relu(x)
-            x = F.dropout(x, p=self.dropout, training=self.training)
+            x = self.dropout(x)
         x = self.convs[-1](x, edge_index)
         return x
 

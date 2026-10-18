@@ -20,14 +20,15 @@ def sample_transaction_data():
 
 @pytest.fixture
 def sample_graph_data():
+    torch.manual_seed(42)
     data = HeteroData()
     data['transaction'].x = torch.rand(10, 5)
     data['transaction'].y = torch.randint(0, 2, (10,))
     data['card'].x = torch.rand(5, 2)
     
     # Edges
-    tx_idx = torch.randint(0, 10, (15,))
-    card_idx = torch.randint(0, 5, (15,))
+    tx_idx = torch.arange(10)
+    card_idx = torch.arange(10) % 5
     edge_index = torch.stack([tx_idx, card_idx], dim=0)
     
     data['transaction', 'uses', 'card'].edge_index = edge_index
@@ -40,9 +41,8 @@ def trained_lgbm_model():
     X = np.random.rand(100, 2)
     y = np.random.randint(0, 2, 100)
     model = lgb.LGBMClassifier(n_estimators=10)
-    model.fit(X, y)
+    model.fit(pd.DataFrame(X, columns=["feat1", "feat2"]), y)
     # Monkeypatch for SHAP testing
-    model.feature_name_ = ["feat1", "feat2"]
     return model
 
 @pytest.fixture

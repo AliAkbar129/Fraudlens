@@ -40,14 +40,24 @@ def test_model_save_load(tmp_path):
     import lightgbm as lgb
     
     trainer = ModelTrainer()
-    lgbm_model = lgb.LGBMClassifier().fit([[0]], [0])
+    lgbm_model = lgb.LGBMClassifier(min_child_samples=1).fit([[0], [1], [2], [3]], [0, 0, 1, 1])
     ens = HybridEnsemble()
     metadata = (['transaction'], [('transaction', 'uses', 'transaction')])
     gnn_model = HeteroGNN(16, 1, metadata)
     
+    gnn_model({'transaction': torch.rand(4, 2)}, {('transaction', 'uses', 'transaction'): torch.tensor([[0, 1], [1, 2]])})
     trainer.save_models(gnn_model, lgbm_model, ens, str(tmp_path))
     
     gnn2 = HeteroGNN(16, 1, metadata)
     gnn2, lgbm2, ens2 = trainer.load_models(gnn2, str(tmp_path))
     assert lgbm2 is not None
     assert ens2 is not None
+
+
+def test_eval_disables_dropout(sample_graph_data):
+    model = HeteroGNN(16, 1, sample_graph_data.metadata())
+    model.eval()
+    with torch.no_grad():
+        a = model(sample_graph_data.x_dict, sample_graph_data.edge_index_dict)['transaction']
+        b = model(sample_graph_data.x_dict, sample_graph_data.edge_index_dict)['transaction']
+    assert torch.equal(a, b)

@@ -4,6 +4,15 @@ from torch_geometric.data import HeteroData
 from loguru import logger
 import json
 
+class TargetOutput(torch.nn.Module):
+    def __init__(self, model, node_type='transaction'):
+        super().__init__()
+        self.model = model
+        self.node_type = node_type
+
+    def forward(self, x_dict, edge_index_dict):
+        return self.model(x_dict, edge_index_dict)[self.node_type]
+
 class GNNExplainerWrapper:
     """Wrapper for PyG's GNNExplainer for heterogeneous graphs."""
     
@@ -11,7 +20,7 @@ class GNNExplainerWrapper:
         self.model = gnn_model
         # Use simple Explainer setup compatible with PyG 2.3+
         self.explainer = Explainer(
-            model=self.model,
+            model=TargetOutput(self.model),
             algorithm=GNNExplainer(epochs=epochs),
             explanation_type='model',
             node_mask_type='attributes',
@@ -19,7 +28,7 @@ class GNNExplainerWrapper:
             model_config=dict(
                 mode='binary_classification',
                 task_level='node',
-                return_type='probs',
+                return_type='raw',
             ),
         )
 
@@ -29,6 +38,7 @@ class GNNExplainerWrapper:
         
         # Heterogeneous explaination requires targeting a specific node dictionary
         # Note: Explainer API in PyG is complex for HeteroData, this provides a structural skeleton
+        self.explainer.model.node_type = target_node_type
         try:
             explanation = self.explainer(
                 data.x_dict, 
@@ -40,8 +50,7 @@ class GNNExplainerWrapper:
                 "edge_mask": explanation.edge_mask_dict if hasattr(explanation, 'edge_mask_dict') else {}
             }
         except Exception as e:
-            logger.warning(f"GNNExplainer failed (mocking response): {str(e)}")
-            return {"node_mask": {}, "edge_mask": {}}
+            raise RuntimeError("Graph explanation failed; no substitute explanation is returned") from e
 
     def extract_fraud_subgraph(self, explanation: dict, threshold: float = 0.5) -> list:
         """Extracts the critical subgraph."""

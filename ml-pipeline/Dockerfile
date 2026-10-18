@@ -14,8 +14,8 @@ WORKDIR /app
 
 # Stage 2: Install Python dependencies
 FROM base as builder
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir -r requirements-api.txt
 
 # Stage 3: Final runtime image
 FROM base
