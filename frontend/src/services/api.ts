@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 10000,
 });
 
@@ -13,14 +13,7 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// Mock response for demo purposes
-api.interceptors.response.use(
-  response => response,
-  error => {
-    console.warn('API Error (returning mock data):', error);
-    return Promise.resolve({ data: [] }); 
-  }
-);
+// Propagate API errors; unavailable data must not look like a successful empty result.
 
 export const dashboardService = {
   getStats: () => api.get('/dashboard/stats'),

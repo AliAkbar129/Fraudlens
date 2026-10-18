@@ -90,3 +90,10 @@ mobile/ios/Flutter/Generated.xcconfig
 mobile/ios/Flutter/app.flx
 mobile/ios/Flutter/flutter_assets/
 mobile/ios/Flutter/flutter_export_environment.sh
+
+# Generated research artifacts and local state
+**/__pycache__/
+**/.pytest_cache/
+**/artifacts/
+*.sqlite*
+*.joblib

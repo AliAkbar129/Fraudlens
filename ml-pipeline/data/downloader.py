@@ -19,7 +19,7 @@ class DataDownloader:
         self.raw_data_dir = Path(raw_data_dir)
         self.raw_data_dir.mkdir(parents=True, exist_ok=True)
         
-    def download_ieee_cis(self, kaggle_api_key: str = None, fallback_path: str = None) -> Tuple[str, str]:
+    def download_ieee_cis(self, kaggle_api_key: str | None = None, fallback_path: str | None = None) -> Tuple[str, str]:
         """
         Downloads or copies the IEEE-CIS dataset.
         

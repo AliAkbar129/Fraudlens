@@ -14,7 +14,10 @@ class SHAPExplainer:
 
     def explain_single(self, features_dict: dict, top_k: int = 5) -> dict:
         """Explains a single transaction."""
-        df = pd.DataFrame([features_dict])
+        names = list(self.model.feature_name_)
+        if set(features_dict) != set(names):
+            raise ValueError('Explanation features must match the trained model schema')
+        df = pd.DataFrame([features_dict], columns=names)
         shap_values = self.explainer.shap_values(df)
         
         # Handle SHAP output structures for different TreeExplainers

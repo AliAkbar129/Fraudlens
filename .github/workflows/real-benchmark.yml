@@ -1,0 +1,32 @@
+name: Real ULB benchmark
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/research-foundations]
+    paths:
+      - research_lab/real_benchmark.py
+      - research_lab/download_ulb.py
+      - .github/workflows/real-benchmark.yml
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r research_lab/requirements.txt
+      - run: python research_lab/download_ulb.py
+      - run: python research_lab/real_benchmark.py --data data/ulb/creditcard.arff
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ulb-evaluation-${{ github.sha }}
+          path: research_lab/evidence/ulb/
+          if-no-files-found: error
+          retention-days: 90
