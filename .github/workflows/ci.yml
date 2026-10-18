@@ -74,6 +74,8 @@ jobs:
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/ready)" = 503
           test "$(curl -s -H 'Accept: application/json' -o /dev/null -w '%{http_code}' http://127.0.0.1:8088/api/transactions)" = 401
       - if: always()
-        run: docker compose logs --tail 100
+        run: |
+          docker compose logs --tail 100
+          docker compose ps -aq | xargs -r docker inspect --format '{{.Name}} {{json .State.Health}}'
       - if: always()
         run: docker compose down -v
