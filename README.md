@@ -31,7 +31,7 @@ An actual seed-42 run is in `research_lab/evidence/synthetic_seed42.json`, inclu
 
 The original React screens include mock demonstrations; they are now labelled as a legacy prototype. API failures no longer masquerade as successful empty responses. The legacy hybrid scoring endpoints now refuse fixed predictions; model-loader fabricated metrics were removed. PHP scoring failures throw rather than recording zero fraud risk. The Laravel transaction wraps scoring and rolls back on this exception; it does not silently retain a successfully scored transaction.
 
-The new workbench deliberately does not pretend to integrate every legacy component. Laravel/MySQL integration, role-based users, historical batch imports, outbox workers, drift studies and prospective real-data validation remain unfinished. The old Docker Compose deployment is not the workbench's setup and was not validated in this environment; PHP and Docker were unavailable.
+The supported application is the FastAPI/SQLite workbench above. The legacy stack is separately checked for build, startup, protected-route rejection and unavailable-model behavior. It is not an end-to-end trained fraud service: role-based user workflows, historical batch imports, outbox workers, drift studies and prospective real-data validation remain outside the completed workbench scope. Docker Compose is not required for the workbench.
 
 ## Attribution
 
@@ -54,4 +54,18 @@ python -m research_lab.real_benchmark --data data/ulb/creditcard.arff --output r
 
 Two historical days cannot establish production performance. Customer IDs are absent, original PCA fitting provenance is unknown, and this evaluation does not model delayed labels. Calibration clips saturated scores; AP changes are not evidence of improved discrimination. Live transaction scoring remains synthetic because its features differ from ULB.
 
-The independent research workflow passes. The legacy full-stack CI currently fails: its frontend has no ESLint configuration or unit-test script, its Python graph dependencies fail during installation, and its PHP runner is older than locked dependencies require. This repository is not yet a verified full-stack deployment.
+## Finalization verification
+
+The research workflow passes seven tests. Legacy CI now checks 19 Python tests, targeted Python correctness diagnostics and type checking, PHP tests and PHPStan level 0, frontend lint/type checking, two utility tests and a production build. Fixes include deterministic graph-model evaluation, tensor-based graph explanations, strict SHAP feature schemas, dependency installation, API route registration, frontend API proxying and explicit unavailable-model failures. These checks do not establish production readiness or an exhaustive browser/security audit.
+
+The Docker integration job builds the stack and checks healthy startup, gateway HTML, backend health, protected API HTTP 401, and unavailable-model HTTP 503. See the [CI history](https://github.com/AliAkbar129/Fraudlens/actions/workflows/ci.yml) for the result at the commit you use. The stack uses the PHP development server and localhost ports; it is for local integration only.
+
+To reproduce that integration check (Docker Compose required):
+
+```bash
+cp docker/.env.example .env
+python -c "import base64,secrets;open('.env','a').write('APP_KEY=base64:'+base64.b64encode(secrets.token_bytes(32)).decode()+'\n')"
+docker compose up -d --build --wait --wait-timeout 180
+```
+
+Open http://127.0.0.1:8088 for the labelled legacy prototype. Use the Python setup at the top of this README for the functional decision workbench.
