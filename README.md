@@ -49,7 +49,7 @@ See [machine-readable results](research_lab/evidence/ulb/evaluation.json), [raw 
 
 ```bash
 python -m research_lab.download_ulb
-python -m research_lab.real_benchmark --help
+python -m research_lab.real_benchmark --data data/ulb/creditcard.arff --output research_lab/evidence/ulb
 ```
 
 Two historical days cannot establish production performance. Customer IDs are absent, original PCA fitting provenance is unknown, and this evaluation does not model delayed labels. Calibration clips saturated scores; AP changes are not evidence of improved discrimination. Live transaction scoring remains synthetic because its features differ from ULB.
