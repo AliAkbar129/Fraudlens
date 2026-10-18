@@ -42,3 +42,19 @@ def test_chronology_enforced(client):
     h={'X-Lab-Key':'local-demo-only'};tx={'transaction_id':'b','card_id':'a','amount':12,'time_step':10}
     assert client.post('/transactions',json=tx,headers=h).status_code==200
     assert client.post('/transactions',json={**tx,'transaction_id':'c','time_step':9},headers=h).status_code==409
+
+
+def test_real_evidence_does_not_require_synthetic_model(client, monkeypatch, tmp_path):
+    monkeypatch.setenv('FRAUD_MODEL', str(tmp_path / 'absent'))
+    response = client.get('/benchmarks/ulb')
+    assert response.status_code == 200
+    report = response.json()
+    assert report['mode'] == 'real_public_retrospective'
+    assert report['splits']['test']['frauds'] == 52
+    assert client.get('/evidence').json()['ready'] is False
+
+
+def test_missing_real_evidence_fails_explicitly(client, monkeypatch, tmp_path):
+    import research_lab.api as api_module
+    monkeypatch.setattr(api_module, 'ROOT', tmp_path)
+    assert client.get('/benchmarks/ulb').status_code == 503

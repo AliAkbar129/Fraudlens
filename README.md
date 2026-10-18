@@ -31,10 +31,27 @@ An actual seed-42 run is in `research_lab/evidence/synthetic_seed42.json`, inclu
 
 The original React screens include mock demonstrations; they are now labelled as a legacy prototype. API failures no longer masquerade as successful empty responses. The legacy hybrid scoring endpoints now refuse fixed predictions; model-loader fabricated metrics were removed. PHP scoring failures throw rather than recording zero fraud risk. The Laravel transaction wraps scoring and rolls back on this exception; it does not silently retain a successfully scored transaction.
 
-The new workbench deliberately does not pretend to integrate every legacy component. Laravel/MySQL integration, role-based users, historical batch imports, outbox workers, drift studies and real-data validation remain unfinished. The old Docker Compose deployment is not the workbench's setup and was not validated in this environment; PHP and Docker were unavailable.
+The new workbench deliberately does not pretend to integrate every legacy component. Laravel/MySQL integration, role-based users, historical batch imports, outbox workers, drift studies and prospective real-data validation remain unfinished. The old Docker Compose deployment is not the workbench's setup and was not validated in this environment; PHP and Docker were unavailable.
 
 ## Attribution
 
 This branch extends the owner's existing code with AI-assisted implementation. Review and understand contributions before claiming ownership of specific methods. The synthetic generator and workbench were implemented for this project; third-party libraries retain their licenses. No new repository-wide license is asserted; the earlier README license badge was unsupported by a repository license file.
 
 Background for the future simulator/validation study: https://fraud-detection-handbook.github.io/fraud-detection-handbook/ . Do not claim results on that simulator until it is actually integrated and evaluated.
+
+## Real public-data evaluation
+
+The [reproducible GitHub run](https://github.com/AliAkbar129/Fraudlens/actions/runs/39120684582) evaluated the original Worldline/ULB credit-card dataset (OpenML 1597): 284,807 rows before removing 1,081 exact duplicates. Time-ordered train/validation/calibration/test partitions contain 170,235 / 42,557 / 28,373 / 42,561 rows. The test period contains only 52 frauds.
+
+Validation selected logistic regression over histogram gradient boosting. Held-out average precision is **0.701836**, ROC AUC **0.975016**. The descriptive 95% time-block bootstrap interval for AP is **[0.517027, 0.838312]** (300 resamples). At 10 retrospective reviews per observed hour, 60 reviews identify 33 of 52 frauds (55% precision, 63.46% recall). This ranking requires the completed hour; it is not an online alert policy.
+
+See [machine-readable results](research_lab/evidence/ulb/evaluation.json), [raw test predictions](research_lab/evidence/ulb/test_predictions.csv.gz), and [protocol](research_lab/REAL_DATA_PROTOCOL.md). Reproduce with:
+
+```bash
+python -m research_lab.download_ulb
+python -m research_lab.real_benchmark --help
+```
+
+Two historical days cannot establish production performance. Customer IDs are absent, original PCA fitting provenance is unknown, and this evaluation does not model delayed labels. Calibration clips saturated scores; AP changes are not evidence of improved discrimination. Live transaction scoring remains synthetic because its features differ from ULB.
+
+The independent research workflow passes. The legacy full-stack CI currently fails: its frontend has no ESLint configuration or unit-test script, its Python graph dependencies fail during installation, and its PHP runner is older than locked dependencies require. This repository is not yet a verified full-stack deployment.

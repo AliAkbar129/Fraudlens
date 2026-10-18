@@ -77,3 +77,10 @@ def audit():
     con=db()
     try:return [dict(r) for r in con.execute('SELECT * FROM events ORDER BY seq DESC LIMIT 100')]
     finally:con.close()
+
+@app.get('/benchmarks/ulb')
+def ulb_benchmark():
+    path = ROOT / 'evidence/ulb/evaluation.json'
+    if not path.is_file():
+        raise HTTPException(503, 'Real-data benchmark evidence is not installed.')
+    return json.loads(path.read_text())

@@ -1,0 +1,233 @@
+{
+  "mode": "real_public_retrospective",
+  "source": "OpenML 1597, creditcard v1, Worldline/ULB",
+  "source_sha256": "fdaf12730dc1fc426f318b71349f24f5c5fd00aa1152940be7e7509ae3d89d2a",
+  "original_rows": 284807,
+  "duplicates_removed": 1081,
+  "split_boundaries_seconds": [
+    120393.0,
+    139298.0,
+    151320.0
+  ],
+  "splits": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "min_time": 0.0,
+      "max_time": 120392.0
+    },
+    "validation": {
+      "rows": 42557,
+      "frauds": 38,
+      "min_time": 120393.0,
+      "max_time": 139297.0
+    },
+    "calibration": {
+      "rows": 28373,
+      "frauds": 41,
+      "min_time": 139298.0,
+      "max_time": 151319.0
+    },
+    "test": {
+      "rows": 42561,
+      "frauds": 52,
+      "min_time": 151320.0,
+      "max_time": 172792.0
+    }
+  },
+  "features": [
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "selected_model": "logistic",
+  "validation_average_precision": {
+    "logistic": 0.7523474085889958,
+    "hist_gradient_boosting": 0.7264794809976689
+  },
+  "test": {
+    "logistic": {
+      "average_precision": 0.7018358391505958,
+      "roc_auc": 0.9750161504260636,
+      "budgets": [
+        {
+          "budget_per_observed_hour": 5,
+          "reviewed": 30,
+          "frauds_found": 22,
+          "precision": 0.7333333333333333,
+          "recall": 0.4230769230769231
+        },
+        {
+          "budget_per_observed_hour": 10,
+          "reviewed": 60,
+          "frauds_found": 33,
+          "precision": 0.55,
+          "recall": 0.6346153846153846
+        },
+        {
+          "budget_per_observed_hour": 25,
+          "reviewed": 150,
+          "frauds_found": 41,
+          "precision": 0.2733333333333333,
+          "recall": 0.7884615384615384
+        }
+      ],
+      "brier": 0.023767433216988907
+    },
+    "hist_gradient_boosting": {
+      "average_precision": 0.6829527659424139,
+      "roc_auc": 0.97610121476538,
+      "budgets": [
+        {
+          "budget_per_observed_hour": 5,
+          "reviewed": 30,
+          "frauds_found": 21,
+          "precision": 0.7,
+          "recall": 0.40384615384615385
+        },
+        {
+          "budget_per_observed_hour": 10,
+          "reviewed": 60,
+          "frauds_found": 33,
+          "precision": 0.55,
+          "recall": 0.6346153846153846
+        },
+        {
+          "budget_per_observed_hour": 25,
+          "reviewed": 150,
+          "frauds_found": 41,
+          "precision": 0.2733333333333333,
+          "recall": 0.7884615384615384
+        }
+      ],
+      "brier": 0.0005107248754630892
+    },
+    "logistic_calibrated": {
+      "average_precision": 0.7333606759022658,
+      "roc_auc": 0.9750211267478199,
+      "budgets": [
+        {
+          "budget_per_observed_hour": 5,
+          "reviewed": 30,
+          "frauds_found": 22,
+          "precision": 0.7333333333333333,
+          "recall": 0.4230769230769231
+        },
+        {
+          "budget_per_observed_hour": 10,
+          "reviewed": 60,
+          "frauds_found": 33,
+          "precision": 0.55,
+          "recall": 0.6346153846153846
+        },
+        {
+          "budget_per_observed_hour": 25,
+          "reviewed": 150,
+          "frauds_found": 41,
+          "precision": 0.2733333333333333,
+          "recall": 0.7884615384615384
+        }
+      ],
+      "brier": 0.00043912328529495913
+    },
+    "amount_rank_reference": {
+      "average_precision": 0.0016931517949130732,
+      "roc_auc": 0.4233709784534316,
+      "budgets": [
+        {
+          "budget_per_observed_hour": 5,
+          "reviewed": 30,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        {
+          "budget_per_observed_hour": 10,
+          "reviewed": 60,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        {
+          "budget_per_observed_hour": 25,
+          "reviewed": 150,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        }
+      ]
+    },
+    "prevalence_reference": {
+      "average_precision": 0.0012217758041399402,
+      "roc_auc": 0.5,
+      "budgets": [
+        {
+          "budget_per_observed_hour": 5,
+          "reviewed": 30,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        {
+          "budget_per_observed_hour": 10,
+          "reviewed": 60,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        {
+          "budget_per_observed_hour": 25,
+          "reviewed": 150,
+          "frauds_found": 0,
+          "precision": 0.0,
+          "recall": 0.0
+        }
+      ],
+      "brier": 0.0012209027703981108
+    }
+  },
+  "selected_AP_block_bootstrap_95_percentile": [
+    0.5170273824139479,
+    0.8383124020682551
+  ],
+  "valid_bootstrap_replicates": 300,
+  "test_prevalence": 0.0012217758041399402,
+  "elapsed_seconds": 7.240444963000002,
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "calibration_note": "Clipping before logit can merge saturated-score ties. AP changes do not establish improved discrimination.",
+  "limitations": [
+    "Only two historical days",
+    "No customer identifiers; no customer-disjoint guarantee",
+    "Original PCA fitting provenance unknown",
+    "Assumes labels available at fitting; no delayed-feedback validation",
+    "Few blocks; descriptive interval only",
+    "Separate from live synthetic scoring",
+    "No financial savings or production validation claim"
+  ]
+}
